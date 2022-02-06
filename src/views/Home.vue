@@ -7,7 +7,10 @@
           <!-- <h2>Description de l'élection</h2> -->
           <!-- <p>Ici décrire le contexte de l'élection (+ les dates), et expliquer les actions possibles genre voter déléguer etc.</p> -->
           <b-card header="Description de l'élection">
-            <b-card-text>Ici décrire le contexte de l'élection (+ les dates), et expliquer les actions possibles genre voter déléguer etc.</b-card-text>
+            <b-card-text
+              >Ici décrire le contexte de l'élection (+ les dates), et expliquer
+              les actions possibles genre voter déléguer etc.</b-card-text
+            >
           </b-card>
         </b-row>
         <!-- Voter Section -->
@@ -15,12 +18,18 @@
           <b-card header="Votre profil de votant">
             <!-- Voter address -->
             <b-card-text>
-              <span v-if="currentAddress">Votre adresse actuelle : {{ currentAddress }}</span>
+              <span v-if="currentAddress"
+                >Votre adresse actuelle : {{ currentAddress }}</span
+              >
               <span v-else>Veuillez vous connecter sur MetaMask</span>
             </b-card-text>
 
             <!-- Informative text on voting -->
-            <b-card-text>Afin de pouvoir voter, vous devez avoir été ajouté à la liste des votants par le responsable de l'élection. Contactez ce dernier pour toute demande à ce sujet.</b-card-text>
+            <b-card-text
+              >Afin de pouvoir voter, vous devez avoir été ajouté à la liste des
+              votants par le responsable de l'élection. Contactez ce dernier
+              pour toute demande à ce sujet.</b-card-text
+            >
 
             <!-- Vote Section -->
             <b-card-text v-if="currentVoter">
@@ -33,7 +42,9 @@
                   @submit.prevent="vote"
                   v-if="!currentVoter.hasVoted && !currentVoter.hasDelegated"
                 >
-                  <label class="sr-only" for="Candidate Address">Adresse du candidat :</label>
+                  <label class="sr-only" for="Candidate Address"
+                    >Adresse du candidat :</label
+                  >
                   <b-input-group prepend="@" class="mb-2 mr-sm-2 mb-sm-0">
                     <b-form-input
                       v-model="candidateVoteAddr"
@@ -44,15 +55,13 @@
                   <b-button type="submit" variant="primary">Voter</b-button>
                 </b-form>
 
-                <span
-                  v-else-if="!currentVoter.hasDelegated"
-                  class="box red"
-                >Vous avez déjà voté pour : {{ currentVoter.votedFor }}</span>
+                <span v-else-if="!currentVoter.hasDelegated" class="box red"
+                  >Vous avez déjà voté pour : {{ currentVoter.votedFor }}</span
+                >
               </div>
-              <span
-                v-else-if="!currentVoter.hasDelegated"
-                class="box red"
-              >Vous n'êtes pas autorisé à voter</span>
+              <span v-else-if="!currentVoter.hasDelegated" class="box red"
+                >Vous n'êtes pas autorisé à voter</span
+              >
             </b-card-text>
 
             <hr />
@@ -63,8 +72,13 @@
             <!-- Delegation Section -->
             <b-card-text v-if="currentVoter && !currentVoter.hasVoted">
               <!-- Delegation form -->
-              <b-form @submit.prevent="delegateVote" v-if="!currentVoter.hasDelegated">
-                <label class="sr-only" for="Receiver Address">Adresse du délégué :</label>
+              <b-form
+                @submit.prevent="delegateVote"
+                v-if="!currentVoter.hasDelegated"
+              >
+                <label class="sr-only" for="Receiver Address"
+                  >Adresse du délégué :</label
+                >
                 <b-input-group prepend="@" class="mb-2 mr-sm-2 mb-sm-0">
                   <b-form-input
                     v-model="delegateVoteAddr"
@@ -87,7 +101,11 @@
       <b-col class="box blue" v-if="currentVoter">
         <b-card header="Section des candidats">
           <b-list-group v-if="!currentVoter.hasVoted">
-            <b-list-group-item v-for="candidate in candidates" :key="candidate">{{ candidate }}</b-list-group-item>
+            <b-list-group-item
+              v-for="candidate in candidates"
+              :key="candidate"
+              >{{ candidate }}</b-list-group-item
+            >
           </b-list-group>
         </b-card>
       </b-col>
@@ -124,8 +142,12 @@
           <td>{{ account.address }}</td>
           <td>{{ account.password }}</td>
           <td>
-            <button @click="currentAddress = account.address">Make default</button>
-            <button @click="unlockAccount(account.address, account.password)">Unlock</button>
+            <button @click="currentAddress = account.address">
+              Make default
+            </button>
+            <button @click="unlockAccount(account.address, account.password)">
+              Unlock
+            </button>
           </td>
         </tr>
       </tbody>
@@ -154,40 +176,15 @@ export default class Home extends Vue {
   candidateVoteAddr: string | null = null;
   delegateVoteAddr: string | null = null;
 
-  stubAccounts: any = [
-    {
-      "address": "0x19Aa6b438E63678Db1eAC588Cb3e8F470a2d757e",
-      "password": "0tgqy"
-    },
-    {
-      "address": "0x8B271d94ee571D8ff255892F0cd7aF77056eb2A6",
-      "password": "86pkh"
-    },
-    {
-      "address": "0x181DceF0E410E59AAD1D601229159621E05A8c54",
-      "password": "goclv"
-    },
-    {
-      "address": "0x3229f059a889a84B0Dc51ec8ca8BF3e00bd8A755",
-      "password": "ppdxri"
-    },
-    {
-      "address": "0x2E0B84844B4CA9dDE3345419cb935Bc00A6735C5",
-      "password": "2svwx"
-    },
-    {
-      "address": "0xa00c3317324ffef335D148D6719069c494188997",
-      "password": "r12yt"
-    }
-  ];
+  stubAccounts: any = [];
 
   async mounted() {
     const web3Provider = new Web3.providers.WebsocketProvider(
-      "ws://localhost:7545"
+      "ws://172.25.0.102:8546"
     );
 
-    if (typeof (window as any).ethereum !== 'undefined') {
-      console.log('MetaMask is installed!');
+    if (typeof (window as any).ethereum !== "undefined") {
+      console.log("MetaMask is installed!");
 
       // (window as any).ethereum.request({ method: 'eth_requestAccounts' });
 
@@ -273,9 +270,10 @@ export default class Home extends Vue {
 
   async getAllCandidates() {
     const candidates = [];
-    const candidatesCount = Number(await this.deployedElectionContract.methods
-      .candidatesCount()
-      .call({ from: this.currentAddress })
+    const candidatesCount = Number(
+      await this.deployedElectionContract.methods
+        .candidatesCount()
+        .call({ from: this.currentAddress })
     );
 
     console.log("candidatesCount", typeof candidatesCount, candidatesCount);

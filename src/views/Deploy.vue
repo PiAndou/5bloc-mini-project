@@ -1,7 +1,10 @@
 <template>
   <b-container fluid class="fillspace box red">
     <div>
-      <b-form @submit.prevent="deploy" v-if="stubAccounts.length && !deployedElectionContract">
+      <b-form
+        @submit.prevent="deploy"
+        v-if="stubAccounts.length && !deployedElectionContract"
+      >
         <b-form-group
           id="input-group-1"
           label="Start date:"
@@ -32,28 +35,47 @@
           ></b-form-datepicker>
         </b-form-group>
 
-        <b-form-group label="Candidates:" description="The candidates to the election">
+        <b-form-group
+          label="Candidates:"
+          description="The candidates to the election"
+        >
           <b-list-group>
-            <b-list-group-item v-for="candidate in candidates" :key="candidate">{{ candidate }}</b-list-group-item>
+            <b-list-group-item
+              v-for="candidate in candidates"
+              :key="candidate"
+              >{{ candidate }}</b-list-group-item
+            >
           </b-list-group>
 
-          <b-form-input v-model="candidateAddr" placeholder="Enter address"></b-form-input>
+          <b-form-input
+            v-model="candidateAddr"
+            placeholder="Enter address"
+          ></b-form-input>
           <b-button
-            :disabled="candidates.includes(candidateAddr) || candidateAddr === ''"
+            :disabled="
+              candidates.includes(candidateAddr) || candidateAddr === ''
+            "
             @click="addCandidate()"
-          >Add candidate</b-button>
+            >Add candidate</b-button
+          >
         </b-form-group>
 
         <b-form-group label="Voters:" description="The voters of the election">
           <b-list-group>
-            <b-list-group-item v-for="voter in voters" :key="voter">{{ voter }}</b-list-group-item>
+            <b-list-group-item v-for="voter in voters" :key="voter">{{
+              voter
+            }}</b-list-group-item>
           </b-list-group>
 
-          <b-form-input v-model="voterAddr" placeholder="Enter address"></b-form-input>
+          <b-form-input
+            v-model="voterAddr"
+            placeholder="Enter address"
+          ></b-form-input>
           <b-button
             :disabled="voters.includes(voterAddr) || voterAddr === ''"
             @click="addVoter()"
-          >Add voter</b-button>
+            >Add voter</b-button
+          >
         </b-form-group>
 
         <b-button type="submit" variant="primary">Deploy</b-button>
@@ -62,12 +84,18 @@
         <pre class="m-0">{{ form }}</pre>
       </b-card>
 
-      <b-card class="mt-3" header="Contract address" v-if="deployedElectionContract">
+      <b-card
+        class="mt-3"
+        header="Contract address"
+        v-if="deployedElectionContract"
+      >
         <pre class="m-0">{{ deployedElectionContract._address }}</pre>
       </b-card>
     </div>
 
-    <button @click="generateStubAccounts" v-if="!stubAccounts.length">Generate stub accounts</button>
+    <button @click="generateStubAccounts" v-if="!stubAccounts.length">
+      Generate stub accounts
+    </button>
     <table v-if="stubAccounts.length">
       <thead>
         <tr>
@@ -81,8 +109,12 @@
           <td>{{ account.address }}</td>
           <td>{{ account.password }}</td>
           <td>
-            <button @click="currentAddress = account.address">Make default</button>
-            <button @click="unlockAccount(account.address, account.password)">Unlock</button>
+            <button @click="currentAddress = account.address">
+              Make default
+            </button>
+            <button @click="unlockAccount(account.address, account.password)">
+              Unlock
+            </button>
           </td>
         </tr>
       </tbody>
@@ -109,32 +141,7 @@ export default class Deploy extends Vue {
   voters: any[] = [];
   candidateAddr = "";
   voterAddr = "";
-  stubAccounts: any = [
-    {
-      "address": "0x19Aa6b438E63678Db1eAC588Cb3e8F470a2d757e",
-      "password": "0tgqy"
-    },
-    {
-      "address": "0x8B271d94ee571D8ff255892F0cd7aF77056eb2A6",
-      "password": "86pkh"
-    },
-    {
-      "address": "0x181DceF0E410E59AAD1D601229159621E05A8c54",
-      "password": "goclv"
-    },
-    {
-      "address": "0x3229f059a889a84B0Dc51ec8ca8BF3e00bd8A755",
-      "password": "ppdxri"
-    },
-    {
-      "address": "0x2E0B84844B4CA9dDE3345419cb935Bc00A6735C5",
-      "password": "2svwx"
-    },
-    {
-      "address": "0xa00c3317324ffef335D148D6719069c494188997",
-      "password": "r12yt"
-    }
-  ];
+  stubAccounts: any = [];
 
   form: any = {
     startDate: null,
@@ -143,11 +150,11 @@ export default class Deploy extends Vue {
 
   async mounted() {
     const web3Provider = new Web3.providers.WebsocketProvider(
-      "ws://localhost:7545"
+      "ws://172.25.0.102:7545"
     );
 
-    if (typeof (window as any).ethereum !== 'undefined') {
-      console.log('MetaMask is installed!');
+    if (typeof (window as any).ethereum !== "undefined") {
+      console.log("MetaMask is installed!");
 
       // (window as any).ethereum.request({ method: 'eth_requestAccounts' });
 
@@ -163,7 +170,7 @@ export default class Deploy extends Vue {
       this.currentAddress = fetchedAccounts[0];
 
       this.electionContract = new this.web3Instance.eth.Contract(
-        ElectionContract.abi as any,
+        ElectionContract.abi as any
         // ElectionContract.networks['5777'].address
       ) as any;
 
@@ -237,7 +244,7 @@ export default class Deploy extends Vue {
       .send({
         from: this.currentAddress,
         gas: 2120541,
-        gasPrice: '2000000000'
+        gasPrice: "2000000000",
       });
 
     console.log("deployedElectionContract", this.deployedElectionContract);
