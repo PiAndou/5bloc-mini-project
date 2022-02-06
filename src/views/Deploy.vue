@@ -103,7 +103,7 @@ export default class Deploy extends Vue {
 
   async mounted() {
     const web3Provider = new Web3.providers.WebsocketProvider(
-      "ws://172.16.254.3:8545"
+      "ws://172.25.0.102:8545"
     );
 
     if (typeof (window as any).ethereum !== "undefined") {

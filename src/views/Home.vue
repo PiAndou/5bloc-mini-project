@@ -171,6 +171,7 @@ export default class Home extends Vue {
   deployedElectionContractAddr: string | null = null;
   deployedElectionContract: any = null;
   currentAddress: string | null = null;
+  electionContract: any = null;
   currentVoter: any = null;
   candidates: any[] = [];
 
@@ -181,7 +182,7 @@ export default class Home extends Vue {
 
   async mounted() {
     const web3Provider = new Web3.providers.WebsocketProvider(
-      "ws://localhost:7545"
+      "ws://172.25.0.102:8545"
     );
 
     if (typeof (window as any).ethereum !== "undefined") {
