@@ -1,37 +1,30 @@
 <template>
-  <div style="height: 100%; display: flex; flex-direction: column;">
-    <b-navbar toggleable="lg" type="dark" variant="info">
-      <b-navbar-brand href="#">Élection du prochain président de Francieland</b-navbar-brand>
+  <div class="flex-space"> <!-- This div is required so the template has only one root element (VueJS v2 limitation) -->
+    <header>
+      <b-navbar variant="dark" type="dark" class="header-navbar">
+        <!-- Page title -->
+        <b-navbar-brand>Élection du prochain président</b-navbar-brand>
 
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-      <b-collapse id="nav-collapse" is-nav>
+        <!-- Pages navigation -->
         <b-navbar-nav>
-          <b-nav-item href="/" :disabled="$route.name === 'Home'">Home</b-nav-item>
-          <b-nav-item href="/deploy" :disabled="$route.name === 'Deploy'">Deploy</b-nav-item>
+          <b-nav-item href="/" :disabled="$route.name === 'Home'">Accueil</b-nav-item>
+          <b-nav-item href="/deploy" :disabled="$route.name === 'Deploy'">Déployer</b-nav-item>
         </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
+      </b-navbar>
+    </header>
 
-    <b-container fluid style="flex: 1 0 auto;">
+    <!-- Views routing -->
+    <div class="fill-space">
       <router-view />
-    </b-container>
+    </div>
 
-    <footer style="flex-shrink: 0;">
+    <footer>
       <!-- Credits -->
-      <b-navbar variant="faded" type="light">
+      <b-navbar variant="faded" type="light" class="footer-navbar">
         <span>
-          Projet de 5BLOC, réalisé par
-          <i>Oussama Akkazi, Pierre André Sarr et Yoann Desvignes</i> - Janvier 2022
+          <b>SUPINFO</b> Projet de 5BLOC, réalisé par <i>Oussama Akkazi, Pierre André Sarr et Yoann Desvignes</i> - Janvier 2022
         </span>
       </b-navbar>
     </footer>
   </div>
 </template>
-
-<script>
-
-</script>
-
-<style>
-</style>

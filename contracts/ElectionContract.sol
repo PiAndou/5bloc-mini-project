@@ -61,13 +61,7 @@ contract ElectionContract {
             candidate.voteCount = 0;
             candidatesCount++;
         }
-        // Initialize default voters
-        /*for (uint i = 0; i < _voters.length; i++) {
-            Voter storage voter = voters[_voters[i]];
-            voter.hasVoted = false;
-            voter.voteWeight = 1;
-            voter.hasDelegated = false;
-        }*/
+        // Initialize the voters' list
         addVoters(_voters);
 
         // Initialize election dates

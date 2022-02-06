@@ -4,32 +4,58 @@ html {
 }
 body {
     height: 100%;
-    /* display: flex;
-    flex-flow: column; */
 }
 .flex-space {
     display: flex;
-    flex-flow: column;
+    flex-direction: column;
     height: 100%;
 }
-.fillspace {
+.fill-space {
     flex: 1;
+    margin: 30px;
 }
 
-/* Highlight blocks */
-.box {
-    border: solid;
-    border-radius: 30px;
+/* Cards section */
+.row > * {
+    padding: 0px !important;
 }
-.red {
-    color: red;
+.container-card {
+    margin-bottom: 15px;
+    padding: 0px !important;
 }
-.green {
-    color: green;
+.margin-right-30 {
+    margin-right: 30px;
 }
-.blue {
-    color: blue;
+
+/* Forms section */
+.form-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
-.orange {
-    color:orange;
+.form-group {
+    flex: 1;
+    max-width: 400px;
+    margin-right: 15px;
+}
+input {
+    max-width: 400px;
+}
+.list-button {
+    margin-top: 10px;
+}
+.button-deploy {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+}
+
+/*---------------------*/
+
+.header-navbar {
+    padding: 0px 15px;
+    justify-content: space-between !important;
+}
+.footer-navbar {
+    justify-content: center !important;
 }

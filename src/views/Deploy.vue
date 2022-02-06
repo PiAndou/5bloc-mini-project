@@ -1,101 +1,90 @@
 <template>
-  <b-container fluid class="fillspace box red">
+  <b-container fluid>
     <div>
-      <b-form
-        @submit.prevent="deploy"
-        v-if="stubAccounts.length && !deployedElectionContract"
-      >
-        <b-form-group
-          id="input-group-1"
-          label="Start date:"
-          label-for="input-1"
-          description="The start date of the contract"
-        >
-          <b-form-datepicker
-            id="input-1"
-            value-as-date
-            v-model="form.startDate"
-            class="mb-2"
-            required
-          ></b-form-datepicker>
-        </b-form-group>
+      <!-- Description -->
+      <p>
+        Vous vous apprêtez à déployer un nouveau Smart Contract. 
+        Vous serez référencé comme responsable en charge de cette nouvelle élection. 
+        Veuillez définir les dates de début et de fin de cette dernière, 
+        ainsi que la liste des candidats qui la composent et la liste des votants autorisés à participer.
+      </p>
 
-        <b-form-group
-          id="input-group-2"
-          label="End date:"
-          label-for="input-2"
-          description="The end date of the contract"
-        >
-          <b-form-datepicker
-            id="input-2"
-            value-as-date
-            v-model="form.endDate"
-            class="mb-2"
-            required
-          ></b-form-datepicker>
-        </b-form-group>
-
-        <b-form-group
-          label="Candidates:"
-          description="The candidates to the election"
-        >
-          <b-list-group>
-            <b-list-group-item
-              v-for="candidate in candidates"
-              :key="candidate"
-              >{{ candidate }}</b-list-group-item
-            >
-          </b-list-group>
-
-          <b-form-input
-            v-model="candidateAddr"
-            placeholder="Enter address"
-          ></b-form-input>
-          <b-button
-            :disabled="
-              candidates.includes(candidateAddr) || candidateAddr === ''
-            "
-            @click="addCandidate()"
-            >Add candidate</b-button
+      <!-- Dates Section -->
+      <b-form @submit.prevent="deploy" v-if="stubAccounts.length && !deployedElectionContract">
+        <div class="form-content">
+          <!-- Start Date -->
+          <b-form-group id="input-group-1"
+            label="Date de début :" label-for="input-1"
           >
-        </b-form-group>
-
-        <b-form-group label="Voters:" description="The voters of the election">
-          <b-list-group>
-            <b-list-group-item v-for="voter in voters" :key="voter">{{
-              voter
-            }}</b-list-group-item>
-          </b-list-group>
-
-          <b-form-input
-            v-model="voterAddr"
-            placeholder="Enter address"
-          ></b-form-input>
-          <b-button
-            :disabled="voters.includes(voterAddr) || voterAddr === ''"
-            @click="addVoter()"
-            >Add voter</b-button
+            <b-form-datepicker
+              id="input-1"
+              value-as-date
+              v-model="form.startDate"
+              class="mb-2"
+              required
+            ></b-form-datepicker>
+          </b-form-group>
+  
+          <!-- End Date -->
+          <b-form-group id="input-group-2"
+            label="Date de fin :" label-for="input-2"
           >
-        </b-form-group>
+            <b-form-datepicker
+              id="input-2"
+              value-as-date
+              v-model="form.endDate"
+              class="mb-2"
+              required
+            ></b-form-datepicker>
+          </b-form-group>
+        </div>
 
-        <b-button type="submit" variant="primary">Deploy</b-button>
+        <!-- Lists Section -->
+        <div class="form-content">
+          <!-- Candidates' list -->
+          <b-form-group label="Liste des candidats :">
+            <b-list-group>
+              <b-list-group-item v-for="candidate in candidates" :key="candidate">{{ candidate }}</b-list-group-item>
+            </b-list-group>
+  
+            <b-form-input v-model="candidateAddr" placeholder="Entrer une adresse"></b-form-input>
+            <b-button class="list-button"
+              :disabled="candidates.includes(candidateAddr) || candidateAddr === ''"
+              @click="addCandidate()"
+            >Ajouter</b-button>
+          </b-form-group>
+
+          <!-- Voters' list -->
+          <b-form-group label="Liste des votants :">
+            <b-list-group>
+              <b-list-group-item v-for="voter in voters" :key="voter">{{ voter }}</b-list-group-item>
+            </b-list-group>
+  
+            <b-form-input v-model="voterAddr" placeholder="Entrer une adresse"></b-form-input>
+            <b-button class="list-button"
+              :disabled="voters.includes(voterAddr) || voterAddr === ''"
+              @click="addVoter()"
+            >Ajouter</b-button>
+          </b-form-group>
+        </div>
+
+        <!-- Deploy button -->
+        <div class="button-deploy">
+          <b-button type="submit" variant="primary">Déployer</b-button>
+        </div>
       </b-form>
+
+      <!-- left for debug to be removed in future -->
       <b-card class="mt-3" header="Form Data Result">
         <pre class="m-0">{{ form }}</pre>
       </b-card>
 
-      <b-card
-        class="mt-3"
-        header="Contract address"
-        v-if="deployedElectionContract"
-      >
+      <b-card class="mt-3" header="Contract address" v-if="deployedElectionContract">
         <pre class="m-0">{{ deployedElectionContract._address }}</pre>
       </b-card>
     </div>
 
-    <button @click="generateStubAccounts" v-if="!stubAccounts.length">
-      Generate stub accounts
-    </button>
+    <button @click="generateStubAccounts" v-if="!stubAccounts.length">Generate stub accounts</button>
     <table v-if="stubAccounts.length">
       <thead>
         <tr>
@@ -109,12 +98,8 @@
           <td>{{ account.address }}</td>
           <td>{{ account.password }}</td>
           <td>
-            <button @click="currentAddress = account.address">
-              Make default
-            </button>
-            <button @click="unlockAccount(account.address, account.password)">
-              Unlock
-            </button>
+            <button @click="currentAddress = account.address">Make default</button>
+            <button @click="unlockAccount(account.address, account.password)">Unlock</button>
           </td>
         </tr>
       </tbody>
@@ -141,7 +126,32 @@ export default class Deploy extends Vue {
   voters: any[] = [];
   candidateAddr = "";
   voterAddr = "";
-  stubAccounts: any = [];
+  stubAccounts: any = [
+    {
+      "address": "0x19Aa6b438E63678Db1eAC588Cb3e8F470a2d757e",
+      "password": "0tgqy"
+    },
+    {
+      "address": "0x8B271d94ee571D8ff255892F0cd7aF77056eb2A6",
+      "password": "86pkh"
+    },
+    {
+      "address": "0x181DceF0E410E59AAD1D601229159621E05A8c54",
+      "password": "goclv"
+    },
+    {
+      "address": "0x3229f059a889a84B0Dc51ec8ca8BF3e00bd8A755",
+      "password": "ppdxri"
+    },
+    {
+      "address": "0x2E0B84844B4CA9dDE3345419cb935Bc00A6735C5",
+      "password": "2svwx"
+    },
+    {
+      "address": "0xa00c3317324ffef335D148D6719069c494188997",
+      "password": "r12yt"
+    }
+  ];
 
   form: any = {
     startDate: null,
@@ -149,12 +159,12 @@ export default class Deploy extends Vue {
   };
 
   async mounted() {
-    const web3Provider = new Web3.providers.HttpProvider(
-      "http://192.168.12.146:8545"
+    const web3Provider = new Web3.providers.WebsocketProvider(
+      "ws://localhost:7545"
     );
 
-    if (typeof (window as any).ethereum !== "undefined") {
-      console.log("MetaMask is installed!");
+    if (typeof (window as any).ethereum !== 'undefined') {
+      console.log('MetaMask is installed!');
 
       // (window as any).ethereum.request({ method: 'eth_requestAccounts' });
 
@@ -170,7 +180,7 @@ export default class Deploy extends Vue {
       this.currentAddress = fetchedAccounts[0];
 
       this.electionContract = new this.web3Instance.eth.Contract(
-        ElectionContract.abi as any
+        ElectionContract.abi as any,
         // ElectionContract.networks['5777'].address
       ) as any;
 
@@ -197,7 +207,7 @@ export default class Deploy extends Vue {
       const address = await this.web3Instance!.eth.personal.newAccount(
         password
       );
-      this.unlockAccount(address, password);
+
       this.stubAccounts.push({
         address,
         password,
@@ -244,10 +254,13 @@ export default class Deploy extends Vue {
       .send({
         from: this.currentAddress,
         gas: 2120541,
-        gasPrice: "2000000000",
+        gasPrice: '2000000000'
       });
 
     console.log("deployedElectionContract", this.deployedElectionContract);
+
+    // HERE open modal
+    this.openModal();
   }
 
   addCandidate() {
@@ -264,6 +277,20 @@ export default class Deploy extends Vue {
 
       this.voterAddr = "";
     }
+  }
+
+  openModal() {
+    const contractAddress = this.deployedElectionContract.options.address;
+    const message = "L'adresse du Smart Contract est " + this.contractAddress + ". Conservez-là soigneusement, elle vous permettra ainsi à vous et aux votants d'accéder à l'élection que vous venez de créer.";
+    return this.$bvModal.msgBoxOk(this.message, {
+      title: 'Smart Contract déployé',
+      size: 'sm',
+      buttonSize: 'sm',
+      okVariant: 'success',
+      headerClass: 'p-2 border-bottom-0',
+      footerClass: 'p-2 border-top-0',
+      centered: true
+    })
   }
 }
 </script>
