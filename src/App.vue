@@ -1,22 +1,23 @@
 <template>
-  <div>
-    <!-- This div is required so the template has only one root element (VueJS v2 limitation) -->
-    <header>
-      <!-- Page Title -->
-      <b-navbar toggleable="lg" type="dark" variant="info">
-        <b-navbar-brand>Élection du prochain président de Francieland</b-navbar-brand>
-      </b-navbar>
-    </header>
+  <div style="height: 100%; display: flex; flex-direction: column;">
+    <b-navbar toggleable="lg" type="dark" variant="info">
+      <b-navbar-brand href="#">Élection du prochain président de Francieland</b-navbar-brand>
 
-    <!-- <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>-->
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-    <div class="flex-space">
+      <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav>
+          <b-nav-item href="/" :disabled="$route.name === 'Home'">Home</b-nav-item>
+          <b-nav-item href="/deploy" :disabled="$route.name === 'Deploy'">Deploy</b-nav-item>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+
+    <b-container fluid style="flex: 1 0 auto;">
       <router-view />
-    </div>
-    <footer>
+    </b-container>
+
+    <footer style="flex-shrink: 0;">
       <!-- Credits -->
       <b-navbar variant="faded" type="light">
         <span>
@@ -27,3 +28,10 @@
     </footer>
   </div>
 </template>
+
+<script>
+
+</script>
+
+<style>
+</style>

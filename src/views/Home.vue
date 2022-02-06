@@ -13,7 +13,6 @@
             >
           </b-card>
         </b-row>
-
         <!-- Voter Section -->
         <b-row class="box green">
           <b-card header="Votre profil de votant">
@@ -171,7 +170,6 @@ export default class Home extends Vue {
   deployedElectionContractAddr: string | null = null;
   deployedElectionContract: any = null;
   currentAddress: string | null = null;
-  electionContract: any = null;
   currentVoter: any = null;
   candidates: any[] = [];
 
@@ -208,10 +206,6 @@ export default class Home extends Vue {
   beforeDestroy() {
     if (this.web3Instance) {
       this.web3Instance = null;
-    }
-
-    if (this.electionContract) {
-      this.electionContract = null;
     }
   }
 

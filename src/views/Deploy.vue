@@ -35,7 +35,50 @@
           ></b-form-datepicker>
         </b-form-group>
 
-        <b-button type="submit" variant="primary">Submit</b-button>
+        <b-form-group
+          label="Candidates:"
+          description="The candidates to the election"
+        >
+          <b-list-group>
+            <b-list-group-item
+              v-for="candidate in candidates"
+              :key="candidate"
+              >{{ candidate }}</b-list-group-item
+            >
+          </b-list-group>
+
+          <b-form-input
+            v-model="candidateAddr"
+            placeholder="Enter address"
+          ></b-form-input>
+          <b-button
+            :disabled="
+              candidates.includes(candidateAddr) || candidateAddr === ''
+            "
+            @click="addCandidate()"
+            >Add candidate</b-button
+          >
+        </b-form-group>
+
+        <b-form-group label="Voters:" description="The voters of the election">
+          <b-list-group>
+            <b-list-group-item v-for="voter in voters" :key="voter">{{
+              voter
+            }}</b-list-group-item>
+          </b-list-group>
+
+          <b-form-input
+            v-model="voterAddr"
+            placeholder="Enter address"
+          ></b-form-input>
+          <b-button
+            :disabled="voters.includes(voterAddr) || voterAddr === ''"
+            @click="addVoter()"
+            >Add voter</b-button
+          >
+        </b-form-group>
+
+        <b-button type="submit" variant="primary">Deploy</b-button>
       </b-form>
       <b-card class="mt-3" header="Form Data Result">
         <pre class="m-0">{{ form }}</pre>
@@ -94,6 +137,10 @@ export default class Deploy extends Vue {
   currentAddress: string | null = null;
   electionContract: any = null;
   deployedElectionContract: any = null;
+  candidates: any[] = [];
+  voters: any[] = [];
+  candidateAddr = "";
+  voterAddr = "";
   stubAccounts: any = [];
 
   form: any = {
@@ -144,18 +191,18 @@ export default class Deploy extends Vue {
   }
 
   async generateStubAccounts() {
-    // for (const i of new Array(6)) {
-    //   const password = (Math.random() + 1).toString(36).substring(7);
+    for (const i of new Array(6)) {
+      const password = (Math.random() + 1).toString(36).substring(7);
 
-    //   const address = await this.web3Instance!.eth.personal.newAccount(
-    //     password
-    //   );
+      const address = await this.web3Instance!.eth.personal.newAccount(
+        password
+      );
 
-    //   this.stubAccounts.push({
-    //     address,
-    //     password,
-    //   });
-    // }
+      this.stubAccounts.push({
+        address,
+        password,
+      });
+    }
 
     console.log("stubAccounts", this.stubAccounts);
   }
@@ -180,12 +227,8 @@ export default class Deploy extends Vue {
     //   .map((account: any) => account.address)
     //   .filter((addr: string) => !candidates.includes(addr));
 
-    const candidates = this.stubAccounts
-      .map((account: any) => account.address)
-      .filter((addr: string) => addr !== this.currentAddress);
-    const voters = this.stubAccounts
-      .map((account: any) => account.address)
-      .filter((addr: string) => addr !== this.currentAddress);
+    const candidates = this.candidates;
+    const voters = this.voters;
 
     const startDate = Math.trunc(this.form.startDate.getTime() / 1000);
     const endDate = Math.trunc(this.form.endDate.getTime() / 1000);
@@ -205,6 +248,22 @@ export default class Deploy extends Vue {
       });
 
     console.log("deployedElectionContract", this.deployedElectionContract);
+  }
+
+  addCandidate() {
+    if (this.candidateAddr.trim()) {
+      this.candidates.push(this.candidateAddr.trim());
+
+      this.candidateAddr = "";
+    }
+  }
+
+  addVoter() {
+    if (this.voterAddr.trim()) {
+      this.voters.push(this.voterAddr.trim());
+
+      this.voterAddr = "";
+    }
   }
 }
 </script>
