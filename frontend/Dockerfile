@@ -2,6 +2,7 @@ FROM node:lts-alpine
 
 # installe un simple serveur http pour servir un contenu statique
 RUN npm install -g http-server
+RUN npm install -g yarn
 
 # définit le dossier 'app' comme dossier de travail
 WORKDIR /app
@@ -17,7 +18,7 @@ COPY . .
 
 RUN npm cache clean --force
 # construit l'app pour la production en la minifiant
-RUN npm run build
+RUN yarn
 
 EXPOSE 8080
 CMD [ "http-server", "dist" ]
