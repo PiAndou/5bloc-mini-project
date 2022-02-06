@@ -18,7 +18,7 @@ COPY . .
 
 RUN npm cache clean --force
 # construit l'app pour la production en la minifiant
-RUN yarn
+RUN npm run build
 
 EXPOSE 8080
 CMD [ "http-server", "dist" ]
