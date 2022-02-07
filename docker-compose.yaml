@@ -11,7 +11,7 @@ services:
       dockerfile: nodes/Dockerfile
       args:
         - ACCOUNT_PASSWORD=${ACCOUNT_PASSWORD}
-    command: --nodekeyhex="b0ac22adcad37213c7c565810a50f1772291e7b0ce53fb73e7ec2a3c75bc13b5" --nodiscover --ipcdisable --networkid=${NETWORK_ID} --netrestrict="172.25.0.0/24" --unlock="0"
+    command: --nodekeyhex="b0ac22adcad37213c7c565810a50f1772291e7b0ce53fb73e7ec2a3c75bc13b5" --nodiscover --ipcdisable --networkid=${NETWORK_ID} --netrestrict="172.25.0.0/24"
     networks:
       priv-eth-net:
         ipv4_address: 172.25.0.101
@@ -49,7 +49,7 @@ services:
       dockerfile: frontend/Dockerfile
     container_name: blockchain-frontend
     ports:
-      - "8080:8080"
+      - "80:8080"
     networks:
       priv-eth-net:
         ipv4_address: 172.25.0.104
