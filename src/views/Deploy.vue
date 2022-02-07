@@ -172,6 +172,7 @@ export default class Deploy extends Vue {
   async mounted() {
     const web3Provider = new Web3.providers.HttpProvider(
       "http://172.25.0.102:8545"
+      //"http://192.168.12.146:8545"
     );
 
     if (typeof (window as any).ethereum !== "undefined") {
@@ -218,7 +219,7 @@ export default class Deploy extends Vue {
       const address = await this.web3Instance!.eth.personal.newAccount(
         password
       );
-
+      this.web3Instance!.eth.personal.unlockAccount(address, password, 15000);
       this.stubAccounts.push({
         address,
         password,
@@ -226,11 +227,6 @@ export default class Deploy extends Vue {
     }
 
     console.log("stubAccounts", this.stubAccounts);
-  }
-
-  async unlockAccount(address: string, password: string) {
-    // unlock for a long time
-    this.web3Instance!.eth.personal.unlockAccount(address, password, 15000);
   }
 
   async deploy() {
