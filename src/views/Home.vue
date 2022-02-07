@@ -7,9 +7,14 @@
           <!-- <h2>Description de l'élection</h2> -->
           <b-card header="Description de l'élection">
             <b-card-text>
-              <p>Adresse du Smart Contract associée : <b>{{ deployedElectionContractAddr }}</b></p>
-              Cette élection se déroule du <b>{startDate} au {endDate}</b>. Vous ne pourrez voter qu'entre ces dates.<br/>
-              Une fois l'élection terminée, l'identité du gagnant s'affichera ici.
+              <p>
+                Adresse du Smart Contract associée :
+                <b>{{ deployedElectionContractAddr }}</b>
+              </p>
+              Cette élection se déroule du <b>{startDate} au {endDate}</b>. Vous
+              ne pourrez voter qu'entre ces dates.<br />
+              Une fois l'élection terminée, l'identité du gagnant s'affichera
+              ici.
             </b-card-text>
           </b-card>
         </b-row>
@@ -19,21 +24,34 @@
           <b-card header="Votre profil de votant">
             <!-- Voter address -->
             <b-card-text>
-              <span v-if="currentAddress">Votre adresse actuelle est : <b>{{ currentAddress }}</b></span>
-              <span v-else class="red">Veuillez vous connecter sur MetaMask</span>
+              <span v-if="currentAddress"
+                >Votre adresse actuelle est : <b>{{ currentAddress }}</b></span
+              >
+              <span v-else class="red"
+                >Veuillez vous connecter sur MetaMask</span
+              >
             </b-card-text>
 
             <!-- Informative text on voting -->
-            <b-card-text>Afin de pouvoir voter, vous devez avoir été ajouté à la liste des votants par le responsable de l'élection. Contactez ce dernier pour toute demande à ce sujet.</b-card-text>
+            <b-card-text
+              >Afin de pouvoir voter, vous devez avoir été ajouté à la liste des
+              votants par le responsable de l'élection. Contactez ce dernier
+              pour toute demande à ce sujet.</b-card-text
+            >
 
             <!-- Vote Section -->
             <b-card-text v-if="currentVoter">
               <!-- If can vote -->
               <div v-if="currentVoter.voteWeight">
-                <b-alert variant="success" show>Vous êtes autorisé à voter</b-alert>
+                <b-alert variant="success" show
+                  >Vous êtes autorisé à voter</b-alert
+                >
 
                 <!-- Vote form -->
-                <b-form @submit.prevent="vote" v-if="!currentVoter.hasVoted && !currentVoter.hasDelegated">
+                <b-form
+                  @submit.prevent="vote"
+                  v-if="!currentVoter.hasVoted && !currentVoter.hasDelegated"
+                >
                   <div class="form-content">
                     <b-input-group prepend="@" class="form-group">
                       <b-form-input
@@ -47,11 +65,19 @@
                 </b-form>
 
                 <!-- Informations about voting restrictions -->
-                <b-alert variant="danger" show v-else-if="!currentVoter.hasDelegated">
+                <b-alert
+                  variant="danger"
+                  show
+                  v-else-if="!currentVoter.hasDelegated"
+                >
                   Vous avez déjà voté pour : {{ currentVoter.votedFor }}
                 </b-alert>
               </div>
-              <b-alert variant="danger" show v-else-if="!currentVoter.hasDelegated">
+              <b-alert
+                variant="danger"
+                show
+                v-else-if="!currentVoter.hasDelegated"
+              >
                 Vous n'êtes pas autorisé à voter
               </b-alert>
             </b-card-text>
@@ -59,12 +85,18 @@
             <hr />
 
             <!-- Informative text on delegating -->
-            <b-card-text>Il vous est possible de déléguer votre vote à un autre votant.</b-card-text>
+            <b-card-text
+              >Il vous est possible de déléguer votre vote à un autre
+              votant.</b-card-text
+            >
 
             <!-- Delegation Section -->
             <b-card-text v-if="currentVoter && !currentVoter.hasVoted">
               <!-- Delegation form -->
-              <b-form @submit.prevent="delegateVote" v-if="!currentVoter.hasDelegated">
+              <b-form
+                @submit.prevent="delegateVote"
+                v-if="!currentVoter.hasDelegated"
+              >
                 <div class="form-content">
                   <b-input-group prepend="@" class="form-group">
                     <b-form-input
@@ -88,19 +120,27 @@
       <b-col class="container-card" v-if="currentVoter">
         <b-card header="Section des candidats">
           <b-list-group v-if="!currentVoter.hasVoted">
-            <b-list-group-item v-for="candidate in candidates" :key="candidate">{{ candidate }}</b-list-group-item>
+            <b-list-group-item
+              v-for="candidate in candidates"
+              :key="candidate"
+              >{{ candidate }}</b-list-group-item
+            >
           </b-list-group>
         </b-card>
       </b-col>
     </b-row>
-    
+
     <!-- Choosing contract Section -->
-    <b-form @submit.prevent="getDeployedContract" v-else>  
+    <b-form @submit.prevent="getDeployedContract" v-else>
       <p>
-        Afin de pouvoir consulter et interagir avec une élection en particulier, veuillez renseigner ci-dessous l'adresse du Smart Contract relié à l'élection souhaitée.<br/>
-        Si vous souhaitez créer votre propre élection en déployant un nouveau Smart Contract, cliquez sur le bouton <b>Déployer</b> en haut à droite de l'écran.
+        Afin de pouvoir consulter et interagir avec une élection en particulier,
+        veuillez renseigner ci-dessous l'adresse du Smart Contract relié à
+        l'élection souhaitée.<br />
+        Si vous souhaitez créer votre propre élection en déployant un nouveau
+        Smart Contract, cliquez sur le bouton <b>Déployer</b> en haut à droite
+        de l'écran.
       </p>
-      
+
       <div class="form-content">
         <b-form-group
           id="input-group-1"
@@ -112,7 +152,7 @@
             id="input-1"
             v-model="deployedElectionContractAddr"
             placeholder="Entrer une adresse"
-            required 
+            required
           ></b-form-input>
         </b-form-group>
         <b-button type="submit" variant="primary">Accéder</b-button>
@@ -133,8 +173,12 @@
           <td>{{ account.address }}</td>
           <td>{{ account.password }}</td>
           <td>
-            <button @click="currentAddress = account.address">Make default</button>
-            <button @click="unlockAccount(account.address, account.password)">Unlock</button>
+            <button @click="currentAddress = account.address">
+              Make default
+            </button>
+            <button @click="unlockAccount(account.address, account.password)">
+              Unlock
+            </button>
           </td>
         </tr>
       </tbody>
@@ -163,40 +207,15 @@ export default class Home extends Vue {
   candidateVoteAddr: string | null = null;
   delegateVoteAddr: string | null = null;
 
-  stubAccounts: any = [
-    {
-      "address": "0x02d5D910515F7264E92B50980AeBeeb026ad9aa6",
-      "password": "80k83"
-    },
-    {
-      "address": "0x74989d4Ba8E319Df30c04065cF3d05074E2186FE",
-      "password": "g1pp5"
-    },
-    {
-      "address": "0x411EE7fcA28c9fdEE82e8a060c9440c1526498bA",
-      "password": "a0z56"
-    },
-    {
-      "address": "0xDD95E03D7620e205e9911c762dDCa813AA424e2e",
-      "password": "0v1sn"
-    },
-    {
-      "address": "0x74ceE509ddeC4DD8827E50603D582bDb5571bF3A",
-      "password": "adzkx"
-    },
-    {
-      "address": "0x1d7D31fD97BbcC0f86e6f7bb4a285cd724328a11",
-      "password": "8m674"
-    }
-  ];
+  stubAccounts: any = [];
 
   async mounted() {
-    const web3Provider = new Web3.providers.WebsocketProvider(
-      "ws://localhost:7545"
+    const web3Provider = new Web3.providers.HttpProvider(
+      "http://172.25.0.102:8545"
     );
 
-    if (typeof (window as any).ethereum !== 'undefined') {
-      console.log('MetaMask is installed!');
+    if (typeof (window as any).ethereum !== "undefined") {
+      console.log("MetaMask is installed!");
 
       // (window as any).ethereum.request({ method: 'eth_requestAccounts' });
 
@@ -218,10 +237,6 @@ export default class Home extends Vue {
   beforeDestroy() {
     if (this.web3Instance) {
       this.web3Instance = null;
-    }
-
-    if (this.electionContract) {
-      this.electionContract = null;
     }
   }
 
@@ -286,9 +301,10 @@ export default class Home extends Vue {
 
   async getAllCandidates() {
     const candidates = [];
-    const candidatesCount = Number(await this.deployedElectionContract.methods
-      .candidatesCount()
-      .call({ from: this.currentAddress })
+    const candidatesCount = Number(
+      await this.deployedElectionContract.methods
+        .candidatesCount()
+        .call({ from: this.currentAddress })
     );
 
     console.log("candidatesCount", typeof candidatesCount, candidatesCount);
