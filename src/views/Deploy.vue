@@ -195,7 +195,6 @@ export default class Deploy extends Vue {
         ElectionContract.abi as any
         // ElectionContract.networks['5777'].address
       ) as any;
-
       console.log("electionContract", this.electionContract);
     } else {
       console.log("MetaMask is not installed");
