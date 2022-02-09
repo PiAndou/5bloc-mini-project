@@ -8,7 +8,7 @@ RUN geth init /tmp/genesis.json \
     && rm -f ~/.ethereum/geth/nodekey \
     && echo ${ACCOUNT_PASSWORD} > /tmp/password \
     && geth account new --password /tmp/password \
-    #&& cat /root/.ethereum/keystore/* \
+    && cat /root/.ethereum/keystore/* \
     # && geth account import --password /tmp/password /tmp/private-key.txt \
     && rm -f /tmp/password
 
