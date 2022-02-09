@@ -211,8 +211,8 @@ export default class Home extends Vue {
 
   async mounted() {
     const web3Provider = new Web3.providers.HttpProvider(
-      "http://172.25.0.102:8545"
-      //"http://192.168.12.146:8545"
+      //"http://172.25.0.102:8545"
+      "http://192.168.12.146:8545"
     );
 
     if (typeof (window as any).ethereum !== "undefined") {
