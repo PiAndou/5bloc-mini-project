@@ -41,17 +41,18 @@ services:
     networks:
       priv-eth-net:
         ipv4_address: 172.25.0.103
-        #frontend:
-        #hostname: frontend
-        #build:
-        #context: .
-        #dockerfile: frontend/Dockerfile
-        #container_name: blockchain-frontend
-        #ports:
-        #- "8080:80"
-        #networks:
-        #priv-eth-net:
-        #ipv4_address: 172.25.0.104
+
+  frontend:
+    hostname: frontend
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: blockchain-frontend
+    ports:
+      - "8080:80"
+    networks:
+      priv-eth-net:
+        ipv4_address: 172.25.0.104
 
 networks:
   priv-eth-net:
