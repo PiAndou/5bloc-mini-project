@@ -3,17 +3,22 @@
     <div>
       <!-- Description -->
       <p>
-        Vous vous apprêtez à déployer un nouveau Smart Contract.
-        Vous serez référencé comme responsable en charge de cette nouvelle élection.
-        Veuillez définir les dates de début et de fin de cette dernière,
-        ainsi que la liste des candidats qui la composent et la liste des votants autorisés à participer.
+        Vous vous apprêtez à déployer un nouveau Smart Contract. Vous serez
+        référencé comme responsable en charge de cette nouvelle élection.
+        Veuillez définir les dates de début et de fin de cette dernière, ainsi
+        que la liste des candidats qui la composent et la liste des votants
+        autorisés à participer.
       </p>
 
       <!-- Dates Section -->
       <b-form @submit.prevent="deploy" v-if="!deployedElectionContract">
         <div class="form-content">
           <!-- Start Date -->
-          <b-form-group id="input-group-1" label="Date de début :" label-for="input-1">
+          <b-form-group
+            id="input-group-1"
+            label="Date de début :"
+            label-for="input-1"
+          >
             <b-form-datepicker
               id="input-1"
               value-as-date
@@ -26,7 +31,11 @@
           </b-form-group>
 
           <!-- End Date -->
-          <b-form-group id="input-group-2" label="Date de fin :" label-for="input-2">
+          <b-form-group
+            id="input-group-2"
+            label="Date de fin :"
+            label-for="input-2"
+          >
             <b-form-datepicker
               id="input-2"
               value-as-date
@@ -44,29 +53,45 @@
           <!-- Candidates' list -->
           <b-form-group label="Liste des candidats :">
             <b-list-group>
-              <b-list-group-item v-for="candidate in candidates" :key="candidate">{{ candidate }}</b-list-group-item>
+              <b-list-group-item
+                v-for="candidate in candidates"
+                :key="candidate"
+                >{{ candidate }}</b-list-group-item
+              >
             </b-list-group>
 
-            <b-form-input v-model="candidateAddr" placeholder="Entrer une adresse"></b-form-input>
+            <b-form-input
+              v-model="candidateAddr"
+              placeholder="Entrer une adresse"
+            ></b-form-input>
             <b-button
               class="list-button"
-              :disabled="candidates.includes(candidateAddr) || candidateAddr === ''"
+              :disabled="
+                candidates.includes(candidateAddr) || candidateAddr === ''
+              "
               @click="addCandidate()"
-            >Ajouter</b-button>
+              >Ajouter</b-button
+            >
           </b-form-group>
 
           <!-- Voters' list -->
           <b-form-group label="Liste des votants :">
             <b-list-group>
-              <b-list-group-item v-for="voter in voters" :key="voter">{{ voter }}</b-list-group-item>
+              <b-list-group-item v-for="voter in voters" :key="voter">{{
+                voter
+              }}</b-list-group-item>
             </b-list-group>
 
-            <b-form-input v-model="voterAddr" placeholder="Entrer une adresse"></b-form-input>
+            <b-form-input
+              v-model="voterAddr"
+              placeholder="Entrer une adresse"
+            ></b-form-input>
             <b-button
               class="list-button"
               :disabled="voters.includes(voterAddr) || voterAddr === ''"
               @click="addVoter()"
-            >Ajouter</b-button>
+              >Ajouter</b-button
+            >
           </b-form-group>
         </div>
 
@@ -105,19 +130,13 @@ export default class Deploy extends Vue {
   };
 
   async mounted() {
-    if (typeof (window as any).ethereum !== 'undefined') {
-      console.log('MetaMask is installed!');
-
-      (window as any).ethereum.request({ method: 'eth_requestAccounts' });
+    if (typeof (window as any).ethereum !== "undefined") {
+      (window as any).ethereum.request({ method: "eth_requestAccounts" });
 
       this.web3Instance = new Web3((window as any).ethereum);
 
-      console.log("web3Instance", this.web3Instance);
-
       // recupere les comptes
       const fetchedAccounts = await this.web3Instance.eth.getAccounts();
-
-      console.log("fetchedAccounts", fetchedAccounts);
 
       // le premier compte est le compte courant connecter via metamask
       this.currentAddress = fetchedAccounts[0];
@@ -126,16 +145,11 @@ export default class Deploy extends Vue {
         ElectionContract.abi as any
       ) as any;
 
-      console.log("electionContract", this.electionContract);
-
       // actualise le compte courant de metamask quand il change de compte
-      (window as any).ethereum.on('accountsChanged', async () => {
-
+      (window as any).ethereum.on("accountsChanged", async () => {
         if (this.web3Instance) {
           // recupere les comptes
           const fetchedAccounts = await this.web3Instance.eth.getAccounts();
-
-          console.log("fetchedAccounts", fetchedAccounts);
 
           // le premier compte est le compte courant connecter via metamask
           this.currentAddress = fetchedAccounts[0];
@@ -165,11 +179,7 @@ export default class Deploy extends Vue {
     const startDate = Math.trunc(this.form.startDate.getTime() / 1000);
     const endDate = Math.trunc(this.form.endDate.getTime() / 1000);
 
-    console.log("startDate", startDate);
-    console.log("endDate", endDate);
-
     // deploiement du contrat sur la blockchain
-    console.log("currentAddress : "+ this.currentAddress);
     this.deployedElectionContract = await this.electionContract
       .deploy({
         data: contractByteCode,
@@ -178,10 +188,8 @@ export default class Deploy extends Vue {
       .send({
         from: this.currentAddress,
         gas: 2120541,
-        gasPrice: '2000000000'
+        gasPrice: "2000000000",
       });
-
-    console.log("deployedElectionContract", this.deployedElectionContract);
 
     // Open modal to display contract address
     this.openModal();
@@ -207,17 +215,20 @@ export default class Deploy extends Vue {
 
   openModal() {
     const contractAddress = this.deployedElectionContract.options.address;
-    const message: string = "L'adresse du Smart Contract est [ " + contractAddress + " ]. Conservez-là soigneusement, elle vous permettra ainsi à vous et aux votants d'accéder à l'élection que vous venez de créer.";
+    const message: string =
+      "L'adresse du Smart Contract est [" +
+      contractAddress +
+      "]. Conservez-là soigneusement, elle vous permettra ainsi à vous et aux votants d'accéder à l'élection que vous venez de créer.";
     return this.$bvModal.msgBoxOk(message, {
-      title: 'Smart Contract déployé',
-      size: 'lg',
-      buttonSize: 'lg',
-      okVariant: 'success',
-      headerClass: 'p-2 border-bottom-0',
-      footerClass: 'p-2 border-top-0',
+      title: "Smart Contract déployé",
+      size: "lg",
+      buttonSize: "lg",
+      okVariant: "success",
+      headerClass: "p-2 border-bottom-0",
+      footerClass: "p-2 border-top-0",
       centered: true,
-      showModal: true
-    })
+      showModal: true,
+    });
   }
 }
 </script>

@@ -1,6 +1,8 @@
 <template>
   <b-container fluid>
-    <b-row v-if="deployedElectionContract && contractStartDate && contractEndDate">
+    <b-row
+      v-if="deployedElectionContract && contractStartDate && contractEndDate"
+    >
       <b-col class="margin-right-30">
         <!-- Informative Section -->
         <b-row class="container-card">
@@ -9,10 +11,16 @@
               <p>
                 Adresse du Smart Contract associé :
                 <b>{{ deployedElectionContractAddr }}</b>
-              </p>Cette élection se déroule du
-              <b>{{ contractStartDate.toLocaleDateString() }} au {{ contractEndDate.toLocaleDateString() }}</b>. Vous ne pourrez voter qu'entre ces dates.
-              <br />Une fois l'élection terminée, l'identité du gagnant s'affichera ici, ci-dessous.
-              <br /><span v-if="winnerAddress != null" class="green">Le gagnant est : <b>{{ winnerAddress }}</b></span>
+              </p>
+              Cette élection se déroule du
+              <b
+                >{{ contractStartDate.toLocaleDateString() }} au
+                {{ contractEndDate.toLocaleDateString() }}</b
+              >. Vous ne pourrez voter qu'entre ces dates. <br />Une fois
+              l'élection terminée, l'identité du gagnant s'affichera ici,
+              ci-dessous. <br /><span v-if="winnerAddress != null" class="green"
+                >Le gagnant est : <b>{{ winnerAddress }}</b></span
+              >
             </b-card-text>
           </b-card>
         </b-row>
@@ -26,22 +34,34 @@
                 Votre adresse actuelle est :
                 <b>{{ currentAddress }}</b>
               </span>
-              <span v-else class="red">Veuillez vous connecter sur MetaMask</span>
+              <span v-else class="red"
+                >Veuillez vous connecter sur MetaMask</span
+              >
             </b-card-text>
 
             <!-- Informative text on voting -->
-            <b-card-text>Afin de pouvoir voter, vous devez avoir été ajouté à la liste des votants par le responsable de l'élection. Contactez ce dernier pour toute demande à ce sujet.</b-card-text>
+            <b-card-text
+              >Afin de pouvoir voter, vous devez avoir été ajouté à la liste des
+              votants par le responsable de l'élection. Contactez ce dernier
+              pour toute demande à ce sujet.</b-card-text
+            >
 
             <!-- Vote Section -->
             <b-card-text v-if="currentVoter">
               <!-- If can vote -->
               <div v-if="currentVoter.voteWeight != 0">
-                <b-alert variant="success" show>Vous êtes autorisé à voter</b-alert>
+                <b-alert variant="success" show
+                  >Vous êtes autorisé à voter</b-alert
+                >
 
                 <!-- Vote form -->
                 <b-form
                   @submit.prevent="vote"
-                  v-if="isElectionOpen && !currentVoter.hasVoted && !currentVoter.hasDelegated"
+                  v-if="
+                    isElectionOpen &&
+                    !currentVoter.hasVoted &&
+                    !currentVoter.hasDelegated
+                  "
                 >
                   <div class="form-content">
                     <b-input-group prepend="@" class="form-group">
@@ -60,24 +80,44 @@
                   variant="danger"
                   show
                   v-else-if="isElectionOpen && !currentVoter.hasDelegated"
-                >Vous avez déjà voté pour : {{ currentVoter.votedFor }}</b-alert>
+                  >Vous avez déjà voté pour :
+                  {{ currentVoter.votedFor }}</b-alert
+                >
               </div>
               <b-alert
                 variant="danger"
                 show
                 v-else-if="isElectionOpen && !currentVoter.hasDelegated"
-              >Vous n'êtes pas autorisé à voter</b-alert>
+                >Vous n'êtes pas autorisé à voter</b-alert
+              >
             </b-card-text>
 
             <hr />
 
             <!-- Informative text on delegating -->
-            <b-card-text v-if="currentVoter && currentVoter.voteWeight != 0 && !currentVoter.hasVoted">Il vous est possible de déléguer votre vote à un autre votant.</b-card-text>
+            <b-card-text
+              v-if="
+                currentVoter &&
+                currentVoter.voteWeight != 0 &&
+                !currentVoter.hasVoted
+              "
+              >Il vous est possible de déléguer votre vote à un autre
+              votant.</b-card-text
+            >
 
             <!-- Delegation Section -->
-            <b-card-text v-if="currentVoter && currentVoter.voteWeight != 0 && !currentVoter.hasVoted">
+            <b-card-text
+              v-if="
+                currentVoter &&
+                currentVoter.voteWeight != 0 &&
+                !currentVoter.hasVoted
+              "
+            >
               <!-- Delegation form -->
-              <b-form @submit.prevent="delegateVote" v-if="!currentVoter.hasDelegated">
+              <b-form
+                @submit.prevent="delegateVote"
+                v-if="!currentVoter.hasDelegated"
+              >
                 <div class="form-content">
                   <b-input-group prepend="@" class="form-group">
                     <b-form-input
@@ -89,11 +129,10 @@
                   <b-button type="submit" variant="primary">Déléguer</b-button>
                 </div>
               </b-form>
-              <b-alert
-                variant="danger"
-                show
-                v-else
-              >Vous avez délégué votre vote à : {{ currentVoter.delegatedTo }}</b-alert>
+              <b-alert variant="danger" show v-else
+                >Vous avez délégué votre vote à :
+                {{ currentVoter.delegatedTo }}</b-alert
+              >
             </b-card-text>
           </b-card>
         </b-row>
@@ -103,7 +142,11 @@
       <b-col class="container-card" v-if="currentVoter">
         <b-card header="Section des candidats">
           <b-list-group v-if="!currentVoter.hasVoted">
-            <b-list-group-item v-for="candidate in candidates" :key="candidate">{{ candidate }}</b-list-group-item>
+            <b-list-group-item
+              v-for="candidate in candidates"
+              :key="candidate"
+              >{{ candidate }}</b-list-group-item
+            >
           </b-list-group>
           <BarChart
             v-else-if="chartData"
@@ -118,9 +161,12 @@
     <!-- Choosing contract Section -->
     <b-form @submit.prevent="getDeployedContract" v-else>
       <p>
-        Afin de pouvoir consulter et interagir avec une élection en particulier, veuillez renseigner ci-dessous l'adresse du Smart Contract relié à l'élection concernée.
-        <br />Si vous souhaitez créer votre propre élection en déployant un nouveau Smart Contract, cliquez sur le bouton
-        <b>Déployer</b> en haut à droite de l'écran.
+        Afin de pouvoir consulter et interagir avec une élection en particulier,
+        veuillez renseigner ci-dessous l'adresse du Smart Contract relié à
+        l'élection concernée.
+        <br />Si vous souhaitez créer votre propre élection en déployant un
+        nouveau Smart Contract, cliquez sur le bouton <b>Déployer</b> en haut à
+        droite de l'écran.
       </p>
 
       <div class="form-content">
@@ -147,9 +193,8 @@
 import { Component, Vue } from "vue-property-decorator";
 import ElectionContract from "@/../build/contracts/ElectionContract.json";
 import Web3 from "web3";
-import { Bar } from 'vue-chartjs';
+import { Bar } from "vue-chartjs";
 import BarChart from "@/components/BarChart.vue";
-
 
 @Component({
   extends: Bar,
@@ -177,37 +222,28 @@ export default class Home extends Vue {
   chartOptions = {
     responsive: true,
     scales: {
-      offset: false
-    }
+      offset: false,
+    },
   };
   chartUpdateKey = 0;
 
   async mounted() {
-    if (typeof (window as any).ethereum !== 'undefined') {
-      console.log('MetaMask is installed!');
-
-      (window as any).ethereum.request({ method: 'eth_requestAccounts' });
+    if (typeof (window as any).ethereum !== "undefined") {
+      (window as any).ethereum.request({ method: "eth_requestAccounts" });
 
       this.web3Instance = new Web3((window as any).ethereum);
 
-      console.log("web3Instance", this.web3Instance);
-
       // recupere les comptes
       const fetchedAccounts = await this.web3Instance.eth.getAccounts();
-
-      console.log("fetchedAccounts", fetchedAccounts);
 
       // le premier compte est le compte courant connecter via metamask
       this.currentAddress = fetchedAccounts[0];
 
       // actualise le compte courant de metamask quand il change de compte
-      (window as any).ethereum.on('accountsChanged', async () => {
-
+      (window as any).ethereum.on("accountsChanged", async () => {
         if (this.web3Instance) {
           // recupere les comptes
           const fetchedAccounts = await this.web3Instance.eth.getAccounts();
-
-          console.log("fetchedAccounts", fetchedAccounts);
 
           // le premier compte est le compte courant connecter via metamask
           this.currentAddress = fetchedAccounts[0];
@@ -237,8 +273,12 @@ export default class Home extends Vue {
     ) as any;
 
     // Get dates from contract
-    const startDate = await this.deployedElectionContract.methods.startDate().call();
-    const endDate = await this.deployedElectionContract.methods.endDate().call();
+    const startDate = await this.deployedElectionContract.methods
+      .startDate()
+      .call();
+    const endDate = await this.deployedElectionContract.methods
+      .endDate()
+      .call();
     // Transform dates to display them
     this.contractStartDate = new Date(Number(startDate) * 1000);
     this.contractEndDate = new Date(Number(endDate) * 1000);
@@ -252,9 +292,6 @@ export default class Home extends Vue {
     } else {
       this.isElectionOpen = false;
     }
-    console.log("is open ? " + this.isElectionOpen);
-
-    console.log("deployedElectionContract", this.deployedElectionContract);
 
     // Get winner if election is over
     if (this.currentDate >= endDate) {
@@ -280,31 +317,31 @@ export default class Home extends Vue {
       votes.push(Number(vote));
     }
 
-    console.log("votes", votes);
-
     this.chartData = {
-      labels: this.candidates.map(addr => addr.substr(0, 10)),
-      datasets: [{
-        label: '# of Votes',
-        data: votes,
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)'
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)'
-        ],
-        borderWidth: 1
-      }]
+      labels: this.candidates.map((addr) => addr.substr(0, 10)),
+      datasets: [
+        {
+          label: "# of Votes",
+          data: votes,
+          backgroundColor: [
+            "rgba(255, 99, 132, 0.2)",
+            "rgba(54, 162, 235, 0.2)",
+            "rgba(255, 206, 86, 0.2)",
+            "rgba(75, 192, 192, 0.2)",
+            "rgba(153, 102, 255, 0.2)",
+            "rgba(255, 159, 64, 0.2)",
+          ],
+          borderColor: [
+            "rgba(255, 99, 132, 1)",
+            "rgba(54, 162, 235, 1)",
+            "rgba(255, 206, 86, 1)",
+            "rgba(75, 192, 192, 1)",
+            "rgba(153, 102, 255, 1)",
+            "rgba(255, 159, 64, 1)",
+          ],
+          borderWidth: 1,
+        },
+      ],
     };
 
     this.$nextTick(() => {
@@ -318,8 +355,6 @@ export default class Home extends Vue {
       .getSpecificVoter()
       .call({ from: this.currentAddress });
 
-    console.log("currentVoter", res);
-
     return res;
   }
 
@@ -330,8 +365,6 @@ export default class Home extends Vue {
       .send({ from: this.currentAddress });
 
     this.candidateVoteAddr = null;
-
-    console.log("voted", res);
 
     // Update smart contract data
     await this.updateAll();
@@ -345,8 +378,6 @@ export default class Home extends Vue {
 
     this.delegateVoteAddr = null;
 
-    console.log("voted", res);
-
     // Update smart contract data
     await this.updateAll();
   }
@@ -354,25 +385,20 @@ export default class Home extends Vue {
   // recupere tout les candiats a l'election
   async getAllCandidates() {
     const candidates = [];
-    const candidatesCount = Number(await this.deployedElectionContract.methods
-      .candidatesCount()
-      .call({ from: this.currentAddress })
+    const candidatesCount = Number(
+      await this.deployedElectionContract.methods
+        .candidatesCount()
+        .call({ from: this.currentAddress })
     );
-
-    console.log("candidatesCount", typeof candidatesCount, candidatesCount);
 
     // obliger de recuperer les candidats un par un cars le mapping ne renvoie pas tout les utilisateurs cars il est dynamique
     for (const [i] of new Array(candidatesCount).entries()) {
-      console.log("candidate index", typeof i, i);
-
       const candidate = await this.deployedElectionContract.methods
         .candidatesList(i)
         .call({ from: this.currentAddress });
 
       candidates.push(candidate);
     }
-
-    console.log("candiates", candidates);
 
     return candidates;
   }
@@ -393,7 +419,6 @@ export default class Home extends Vue {
       .call({ from: this.currentAddress });
 
     this.winnerAddress = res;
-    console.log("winner", res);
   }
 }
 </script>
