@@ -188,8 +188,6 @@ export default class Deploy extends Vue {
       })
       .send({
         from: this.currentAddress,
-        //gas: 2120541,
-        //gasPrice: "2000000",
       });
 
     // Open modal to display contract address
