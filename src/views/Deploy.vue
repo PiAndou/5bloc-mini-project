@@ -180,6 +180,7 @@ export default class Deploy extends Vue {
     const endDate = Math.trunc(this.form.endDate.getTime() / 1000);
 
     // deploiement du contrat sur la blockchain
+    console.log(contractByteCode);
     this.deployedElectionContract = await this.electionContract
       .deploy({
         data: contractByteCode,
@@ -188,7 +189,7 @@ export default class Deploy extends Vue {
       .send({
         from: this.currentAddress,
         gas: 2120541,
-        gasPrice: "2000000000",
+        gasPrice: "2000000",
       });
 
     // Open modal to display contract address
